@@ -19,10 +19,12 @@ package org.apache.beam;
 
 import java.util.Arrays;
 import org.apache.beam.sdk.Pipeline;
+import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.Count;
+import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.Filter;
 import org.apache.beam.sdk.transforms.FlatMapElements;
 import org.apache.beam.sdk.transforms.MapElements;
@@ -78,6 +80,12 @@ import com.opencsv.CSVReader;
  */
 public class MinimalWordComparator {
 
+	
+ public static class ComputeWordLengthFn extends DoFn<String, Integer> { 
+	 
+	 
+ }
+
 
   public static void main(String[] args) {
 	
@@ -92,7 +100,9 @@ public class MinimalWordComparator {
     // options for our pipeline, such as the runner you wish to use. This example
     // will run with the DirectRunner by default, based on the class path configured
     // in its dependencies.
-     PipelineOptions options = PipelineOptionsFactory.create();
+//     PipelineOptions options = PipelineOptionsFactory.create();
+     
+	  PipelineOptions options = PipelineOptionsFactory.fromArgs(args).create();
 
     // In order to run your pipeline, you need to make following runner specific changes:
     //
@@ -176,7 +186,15 @@ public class MinimalWordComparator {
 			
 			System.out.println("test");
 			
-			System.out.println(HEADERS.get(1));
+//			System.out.println(HEADERS.get(1));
+//			for (int index = 0; index < HEADERS.size(); index++) {
+				p.apply(Create.of(HEADERS)).setCoder(StringUtf8Coder.of())
+				.apply(ParDo.of(fn))
+				.apply(TextIO.write().to("wordcounts"));
+
+	            p.run().waitUntilFinish();
+//			}
+			 
 		
 	}catch(Exception e){
 		System.out.println(e);
