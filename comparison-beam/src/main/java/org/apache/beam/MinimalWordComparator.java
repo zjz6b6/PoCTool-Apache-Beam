@@ -80,19 +80,7 @@ public class MinimalWordComparator {
 
 
   public static void main(String[] args) {
-	try{
 	
-		 CSVReader reader = new CSVReader(new FileReader("files/credit_train_data.csv"));
-		 String[] nextLine;
-		 while((nextLine = reader.readNext()) != null){
-			 if(nextLine != null){
-				 System.out.println(Arrays.toString(nextLine));
-			 }
-		 }
-		
-	}catch(Exception e){
-		System.out.println(e);
-	}
 	
 //	System.out.println("CSV Read Complete");
 
@@ -104,7 +92,7 @@ public class MinimalWordComparator {
     // options for our pipeline, such as the runner you wish to use. This example
     // will run with the DirectRunner by default, based on the class path configured
     // in its dependencies.
-    // PipelineOptions options = PipelineOptionsFactory.create();
+     PipelineOptions options = PipelineOptionsFactory.create();
 
     // In order to run your pipeline, you need to make following runner specific changes:
     //
@@ -122,7 +110,9 @@ public class MinimalWordComparator {
     //      .setRunner(FlinkRunner.class);
 
     // Create the Pipeline object with the options we defined above
-    // Pipeline p = Pipeline.create(options);
+     Pipeline p = Pipeline.create(options);
+     
+     
 
     // Concept #1: Apply a root transform to the pipeline; in this case, TextIO.Read to read a set
     // of input text files. TextIO.Read returns a PCollection where each element is one line from
@@ -159,6 +149,38 @@ public class MinimalWordComparator {
         // .apply(TextIO.write().to("wordcounts"));
 
 //            pipeline.run().waitUntilFinish();
+     
+     try{
+    		
+		 CSVReader reader = new CSVReader(new FileReader("files/credit_train_data.csv"));
+		 String[] nextLine;
+		 ArrayList<String> rows = new ArrayList<>();
+		 while((nextLine = reader.readNext()) != null){
+			 if(nextLine != null){
+				 rows.add(Arrays.toString(nextLine));
+				 System.out.println(Arrays.toString(nextLine));		  
+			 }
+		 }
+		 
+		 System.out.println("rubbish");
+		String HEADERS_SPLIT[] = rows.get(0).split(",");
+		ArrayList<String>HEADERS = new ArrayList<>();
+		
+		for (int i = 0; i < HEADERS_SPLIT.length; i++) {
+			HEADERS.add(HEADERS_SPLIT[i]);
+		}
+		
+			for (int i = 0; i < HEADERS.size(); i++) {
+				System.out.println(HEADERS.get(i));
+			}	
+			
+			System.out.println("test");
+			
+			System.out.println(HEADERS.get(1));
+		
+	}catch(Exception e){
+		System.out.println(e);
+	}
 
 
   }
