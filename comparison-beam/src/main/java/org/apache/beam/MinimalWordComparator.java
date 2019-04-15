@@ -35,14 +35,14 @@ public class MinimalWordComparator {
             MapElements.into(TypeDescriptors.strings())
                 .via(
                     (KV<String, Long> lineCount) ->
-                        "Headers are equal" + "? " + (areHeadersEqual = (lineCount.getValue() > 1)) ));
+                        lineCount.getKey() + ": " + lineCount.getValue()))
         
         // Apply a write transform, TextIO.Write, at the end of the pipeline.
         // TextIO.Write writes the contents of a PCollection (in this case, our PCollection of
         // formatted strings) to a series of text files.
         //
         // By default, it will write to a set of files with names like headerequality-00001-of-00005
-//        .apply(TextIO.write().to("headerequality"));
+        .apply(TextIO.write().to("lineCount"));
 
     p.run().waitUntilFinish();
     
