@@ -6,10 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.beam.sdk.Pipeline;
+import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.Count;
+import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.Filter;
 import org.apache.beam.sdk.transforms.FlatMapElements;
@@ -52,14 +54,14 @@ public class MinimalWordComparator {
 			 while((nextLine = trainReader.readNext()) != null){
 				 if(nextLine != null){
 					 csvTrainLines.add(Arrays.toString(nextLine));
-					 System.out.println(Arrays.toString(nextLine));		  
+//					 System.out.println(Arrays.toString(nextLine));		  
 				 }
 			 }
 			 
 			 while((nextLine = testReader.readNext()) != null){
 				 if(nextLine != null){
 					 csvTestLines.add(Arrays.toString(nextLine));
-					 System.out.println(Arrays.toString(nextLine));		  
+//					 System.out.println(Arrays.toString(nextLine));		  
 				 }
 			 }
 
@@ -71,33 +73,33 @@ public class MinimalWordComparator {
 			String TEST_HEADERS_SPLIT[] = csvTrainLines.get(0).split(",");
 			ArrayList<String>TEST_HEADERS = new ArrayList<>();	
 			//Iterate adding the HEADERS	
-			for (int i = 0; i < TRAIN_HEADERS_SPLIT.length; i++) {
-				TRAIN_HEADERS.add(TRAIN_HEADERS_SPLIT[i]);
-			}
+//			for (int i = 0; i < TRAIN_HEADERS_SPLIT.length; i++) {
+//				TRAIN_HEADERS.add(TRAIN_HEADERS_SPLIT[i]);
+//			}
 			//Iterate printing the HEADERS
-			for (int i = 0; i < TRAIN_HEADERS.size(); i++) {
-				System.out.println(TRAIN_HEADERS.get(i));
-			}	
+//			for (int i = 0; i < TRAIN_HEADERS.size(); i++) {
+//				System.out.println(TRAIN_HEADERS.get(i));
+//			}	
 			
 				//Iterate printing the second header
-				System.out.println("train_headers: "+TRAIN_HEADERS.get(1));
+//				System.out.println("train_headers: "+TRAIN_HEADERS.get(1));
 				
 				
 				for (int i = 0; i < TEST_HEADERS_SPLIT.length; i++) {
 					TEST_HEADERS.add(TEST_HEADERS_SPLIT[i]);
 				}
 				//Iterate printing the HEADERS
-				for (int i = 0; i < TEST_HEADERS.size(); i++) {
-					System.out.println(TEST_HEADERS.get(i));
-				}	
+//				for (int i = 0; i < TEST_HEADERS.size(); i++) {
+//					System.out.println(TEST_HEADERS.get(i));
+//				}	
 				
 					//Iterate printing the second header
-					System.out.println("test_headers: "+TEST_HEADERS.get(1));
+//					System.out.println("test_headers: "+TEST_HEADERS.get(1));
 			    	
-			
+					p.apply(Create.of(TEST_HEADERS)).setCoder(StringUtf8Coder.of())
+					.apply(TextIO.write().to("headers"));
 				
-			    p.run().waitUntilFinish();
-				
+					p.run().waitUntilFinish();
 			
 		}catch(Exception e){
 			System.out.println(e);
