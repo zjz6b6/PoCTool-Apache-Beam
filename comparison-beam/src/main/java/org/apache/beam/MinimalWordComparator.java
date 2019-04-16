@@ -3,6 +3,8 @@ package org.apache.beam;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptions;
@@ -31,42 +33,71 @@ public class MinimalWordComparator {
   
   public static void main(String[] args) {
 	  
-//    PipelineOptions options = PipelineOptionsFactory.create();
-//    Pipeline p = Pipeline.create(options);
+    PipelineOptions options = PipelineOptionsFactory.create();
+    Pipeline p = Pipeline.create(options);
 
 
-//    p.run().waitUntilFinish();
+
     
     //Read from all files in the files/ directory
 
 	  try{
 		  	//Read file from files/ directory
-			 CSVReader reader = new CSVReader(new FileReader("files/credit_train_data.csv"));
+			 CSVReader trainReader = new CSVReader(new FileReader("files/credit_train_data.csv"));
+			 CSVReader testReader = new CSVReader(new FileReader("files/credit_test_data.csv"));
 			 String[] nextLine;
-			 ArrayList<String> rows = new ArrayList<>();
+			 ArrayList<String> csvTrainLines = new ArrayList<>();
+			 ArrayList<String> csvTestLines = new ArrayList<>();
 			 //Iterate through each line printing its contents			 
-			 while((nextLine = reader.readNext()) != null){
+			 while((nextLine = trainReader.readNext()) != null){
 				 if(nextLine != null){
-					 rows.add(Arrays.toString(nextLine));
+					 csvTrainLines.add(Arrays.toString(nextLine));
+					 System.out.println(Arrays.toString(nextLine));		  
+				 }
+			 }
+			 
+			 while((nextLine = testReader.readNext()) != null){
+				 if(nextLine != null){
+					 csvTestLines.add(Arrays.toString(nextLine));
 					 System.out.println(Arrays.toString(nextLine));		  
 				 }
 			 }
 
 			 
 			//Split the lines based on ',' appearing [Loan ID Customer ID Loan Status Current Loan Amount Term Credit Score]		 
-			String HEADERS_SPLIT[] = rows.get(0).split(",");
-			ArrayList<String>HEADERS = new ArrayList<>();		
+			String TRAIN_HEADERS_SPLIT[] = csvTrainLines.get(0).split(",");
+			ArrayList<String>TRAIN_HEADERS = new ArrayList<>();
+			
+			String TEST_HEADERS_SPLIT[] = csvTrainLines.get(0).split(",");
+			ArrayList<String>TEST_HEADERS = new ArrayList<>();	
 			//Iterate adding the HEADERS	
-			for (int i = 0; i < HEADERS_SPLIT.length; i++) {
-				HEADERS.add(HEADERS_SPLIT[i]);
+			for (int i = 0; i < TRAIN_HEADERS_SPLIT.length; i++) {
+				TRAIN_HEADERS.add(TRAIN_HEADERS_SPLIT[i]);
 			}
 			//Iterate printing the HEADERS
-			for (int i = 0; i < HEADERS.size(); i++) {
-				System.out.println(HEADERS.get(i));
+			for (int i = 0; i < TRAIN_HEADERS.size(); i++) {
+				System.out.println(TRAIN_HEADERS.get(i));
 			}	
 			
 				//Iterate printing the second header
-				System.out.println(HEADERS.get(1));
+				System.out.println("train_headers: "+TRAIN_HEADERS.get(1));
+				
+				
+				for (int i = 0; i < TEST_HEADERS_SPLIT.length; i++) {
+					TEST_HEADERS.add(TEST_HEADERS_SPLIT[i]);
+				}
+				//Iterate printing the HEADERS
+				for (int i = 0; i < TEST_HEADERS.size(); i++) {
+					System.out.println(TEST_HEADERS.get(i));
+				}	
+				
+					//Iterate printing the second header
+					System.out.println("test_headers: "+TEST_HEADERS.get(1));
+			    	
+			
+				
+			    p.run().waitUntilFinish();
+				
 			
 		}catch(Exception e){
 			System.out.println(e);
