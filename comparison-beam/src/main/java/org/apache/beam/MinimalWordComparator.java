@@ -67,10 +67,10 @@ public class MinimalWordComparator {
 
 			 
 			//Split the lines based on ',' appearing [Loan ID Customer ID Loan Status Current Loan Amount Term Credit Score]		 
-			String TRAIN_HEADERS_SPLIT[] = csvTrainLines.get(0).split(",");
+			String TRAIN_HEADERS_SPLIT[] = csvTrainLines.get(0).split("[,|[+|]+//]");
 			ArrayList<String>TRAIN_HEADERS = new ArrayList<>();
 			
-			String TEST_HEADERS_SPLIT[] = csvTrainLines.get(0).split(",");
+			String TEST_HEADERS_SPLIT[] = csvTrainLines.get(0).split("[,|[+|]+//]");
 			ArrayList<String>TEST_HEADERS = new ArrayList<>();	
 			//Iterate adding the HEADERS	
 //			for (int i = 0; i < TRAIN_HEADERS_SPLIT.length; i++) {
@@ -97,7 +97,10 @@ public class MinimalWordComparator {
 //					System.out.println("test_headers: "+TEST_HEADERS.get(1));
 			    	
 					p.apply(Create.of(TEST_HEADERS)).setCoder(StringUtf8Coder.of())
-					.apply(TextIO.write().to("headers"));
+					.apply(TextIO.write().to("test-headers"));
+					
+//					p.apply(Create.of(TRAIN_HEADERS)).setCoder(StringUtf8Coder.of())
+//					.apply(TextIO.write().to("headers"));
 				
 					p.run().waitUntilFinish();
 			
