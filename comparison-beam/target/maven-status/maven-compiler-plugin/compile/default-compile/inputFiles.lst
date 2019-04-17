@@ -1,2 +1,6 @@
-/Users/HusseinATejan/Desktop/Comptool/comparison-beam/src/main/java/org/apache/beam/RemoveCSVHeader.java
-/Users/HusseinATejan/Desktop/Comptool/comparison-beam/src/main/java/org/apache/beam/MinimalWordComparator.java
+C:\Users\hussein.tejan\Desktop\Beam\PoCTool-Apache-Beam\comparison-beam\src\main\java\org\apache\beam\comparisontool\RemoveCSVHeader.java
+C:\Users\hussein.tejan\Desktop\Beam\PoCTool-Apache-Beam\comparison-beam\src\main\java\org\apache\beam\comparisontool\model\CSVComparisonMappingType.java
+C:\Users\hussein.tejan\Desktop\Beam\PoCTool-Apache-Beam\comparison-beam\src\main\java\org\apache\beam\comparisontool\CSVFileLoader.java
+C:\Users\hussein.tejan\Desktop\Beam\PoCTool-Apache-Beam\comparison-beam\src\main\java\org\apache\beam\comparisontool\model\CSVComparisonCompositeKey.java
+C:\Users\hussein.tejan\Desktop\Beam\PoCTool-Apache-Beam\comparison-beam\src\main\java\org\apache\beam\comparisontool\MinimalWordComparator.java
+C:\Users\hussein.tejan\Desktop\Beam\PoCTool-Apache-Beam\comparison-beam\src\main\java\org\apache\beam\comparisontool\model\CSVComparisonEntry.java

@@ -1,1 +1,5 @@
-org/apache/beam/MinimalWordComparator.class
+org\apache\beam\comparisontool\MinimalWordComparator.class
+org\apache\beam\comparisontool\CSVFileLoader.class
+org\apache\beam\comparisontool\model\CSVComparisonEntry.class
+org\apache\beam\comparisontool\model\CSVComparisonCompositeKey.class
+org\apache\beam\comparisontool\model\CSVComparisonMappingType.class
