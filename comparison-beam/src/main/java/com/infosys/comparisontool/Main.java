@@ -59,7 +59,7 @@ public class Main implements Serializable {
 
                         String headers = CSVHeaders.getHeaders(file.getPath());
                         if (c.element().equals(headers)) {
-                            //can't remember    
+                            //can't remember
                         }
 
                         int col = 1;
