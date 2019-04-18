@@ -1,0 +1,4 @@
+com\poc\flink\model\CSVComparisonMappingType.class
+com\poc\flink\model\CSVComparisonCompositeKey.class
+com\poc\flink\model\CSVComparisonEntry.class
+com\poc\flink\TestFlink.class

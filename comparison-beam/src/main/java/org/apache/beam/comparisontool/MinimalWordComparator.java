@@ -35,6 +35,7 @@ import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PDone;
 import org.apache.beam.sdk.values.POutput;
 import org.apache.beam.sdk.values.TupleTag;
+import org.apache.beam.sdk.values.TypeDescriptor;
 
 
 public class MinimalWordComparator {
@@ -51,20 +52,7 @@ public class MinimalWordComparator {
     //Read from all files in the files/ directory
 
 	  try{
-		  
-		p.apply(TextIO.read().from("files/*"))
-		  .apply(Filter.by((String lines) -> !lines.isEmpty()))
-		  .apply(Count.perElement())
-		  .apply(
-			             MapElements.into(TypeDescriptors.strings())
-			                 .via(
-			                     (KV<String, Long> lineCount) ->
-			                      lineCount.getKey() + ": " + lineCount.getValue()))
-		  .apply(TextIO.write().to("data"));
-		
-		
-		  
-		  
+			  	  
 		  CSVFileLoader fileOneMap = new CSVFileLoader("files/credit_test_data.csv");
 		  CSVFileLoader fileTwoMap = new CSVFileLoader("files/credit_train_data.csv");
 
@@ -84,8 +72,14 @@ public class MinimalWordComparator {
 		 for(String key: mapString.keySet()) {
 //			 System.out.println(mapString.get(key));
 			 p.apply(Create.of(mapString.get(key))).setCoder(StringUtf8Coder.of())
-			 .apply(Filter.by((String cell) -> !cell.isEmpty()));
-//			 .apply(TextIO.write().to("cells"));
+			 .apply(Filter.by((String cell) -> !cell.isEmpty()))
+			 .apply(Count.perElement())
+			 .apply(
+					 MapElements.into(TypeDescriptors.strings())
+					 .via(
+						   (KV<String,Long> cellCount) ->
+						   cellCount.getKey() + ": "+ cellCount.getValue()))
+			 .apply(TextIO.write().to("cellCount"));
 		 }
 		 
 		 
