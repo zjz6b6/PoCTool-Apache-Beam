@@ -32,6 +32,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.PDone;
+import org.apache.beam.sdk.values.POutput;
 import org.apache.beam.sdk.values.TupleTag;
 
 
@@ -39,7 +41,7 @@ public class MinimalWordComparator {
 	
 	
 
-  static boolean areCellsEqual = false;
+  static boolean areLinesEqual = false;
   
   public static void main(String[] args) {
 	  
@@ -49,57 +51,19 @@ public class MinimalWordComparator {
     //Read from all files in the files/ directory
 
 	  try{
-		  	//Read file from files/ directory
-//			 CSVReader trainReader = new CSVReader(new FileReader("files/credit_train_data.csv"));
-//			 CSVReader testReader = new CSVReader(new FileReader("files/credit_test_data.csv"));
-//			 String[] nextLine;
-//			 ArrayList<String> csvTrainLines = new ArrayList<>();
-//			 ArrayList<String> csvTestLines = new ArrayList<>();
-//			 //Iterate through each line printing its contents			 
-//			 while((nextLine = trainReader.readNext()) != null){
-//				 if(nextLine != null){
-//					 csvTrainLines.add(Arrays.toString(nextLine));
-//					 System.out.println(Arrays.toString(nextLine));		  
-//				 }
-//			 }
-			 
-//			 while((nextLine = testReader.readNext()) != null){
-//				 if(nextLine != null){
-//					 csvTestLines.add(Arrays.toString(nextLine));
-//					 System.out.println(Arrays.toString(nextLine));		  
-//				 }
-//			 }
-
-			 
-			//Split the lines based on ',' appearing [Loan ID Customer ID Loan Status Current Loan Amount Term Credit Score]		 
-//			String TRAIN_HEADERS_SPLIT[] = csvTrainLines.get(0).split("[,|[+|]+//]");
-//			ArrayList<String>TRAIN_HEADERS = new ArrayList<>();
-			
-//			String TEST_HEADERS_SPLIT[] = csvTrainLines.get(0).split("[,|[+|]+//]");
-//			ArrayList<String>TEST_HEADERS = new ArrayList<>();	
-			//Iterate adding the HEADERS	
-//			for (int i = 0; i < TRAIN_HEADERS_SPLIT.length; i++) {
-//				TRAIN_HEADERS.add(TRAIN_HEADERS_SPLIT[i]);
-//			}
-			//Iterate printing the HEADERS
-//			for (int i = 0; i < TRAIN_HEADERS.size(); i++) {
-//				System.out.println(TRAIN_HEADERS.get(i));
-//			}	
-			
-				//Iterate printing the second header
-//				System.out.println("train_headers: "+TRAIN_HEADERS.get(1));
-				
-				
-//				for (int i = 0; i < TEST_HEADERS_SPLIT.length; i++) {
-//					TEST_HEADERS.add(TEST_HEADERS_SPLIT[i]);
-//				}
-				//Iterate printing the HEADERS
-//				for (int i = 0; i < TEST_HEADERS.size(); i++) {
-//					System.out.println(TEST_HEADERS.get(i));
-//				}	
-				
-					//Iterate printing the second header
-//					System.out.println("test_headers: "+TEST_HEADERS.get(1));
+		  
+		p.apply(TextIO.read().from("files/*"))
+		  .apply(Filter.by((String lines) -> !lines.isEmpty()))
+		  .apply(Count.perElement())
+		  .apply(
+			             MapElements.into(TypeDescriptors.strings())
+			                 .via(
+			                     (KV<String, Long> lineCount) ->
+			                      lineCount.getKey() + ": " + lineCount.getValue()))
+		  .apply(TextIO.write().to("data"));
+		
+		
+		  
 		  
 		  CSVFileLoader fileOneMap = new CSVFileLoader("files/credit_test_data.csv");
 		  CSVFileLoader fileTwoMap = new CSVFileLoader("files/credit_train_data.csv");
@@ -120,8 +84,8 @@ public class MinimalWordComparator {
 		 for(String key: mapString.keySet()) {
 //			 System.out.println(mapString.get(key));
 			 p.apply(Create.of(mapString.get(key))).setCoder(StringUtf8Coder.of())
-			 .apply(Filter.by((String cell) -> !cell.isEmpty()))
-			 .apply(TextIO.write().to("cells"));
+			 .apply(Filter.by((String cell) -> !cell.isEmpty()));
+//			 .apply(TextIO.write().to("cells"));
 		 }
 		 
 		 
@@ -133,13 +97,13 @@ public class MinimalWordComparator {
 				
 					p.run().waitUntilFinish();
 					
-					if(areCellsEqual){
-				        System.out.println("CELLS ARE EQUAL, CONTINUE WITH PROCESSING");
-				      
-					//We can probably start a new process here using p.apply() since we know headers are equal
-				    }else{
-				        System.out.println("CELLS ARE NOT EQUAL, STOPPING");
-				    }
+//					if(areLinesEqual){
+//				        System.out.println("LINES ARE EQUAL, CONTINUE WITH PROCESSING");
+//				      
+//					//We can probably start a new process here using p.apply() since we know headers are equal
+//				    }else{
+//				        System.out.println("LINES ARE NOT EQUAL, STOPPING");
+//				    }
 			
 		}catch(Exception e){
 			System.out.println(e);
