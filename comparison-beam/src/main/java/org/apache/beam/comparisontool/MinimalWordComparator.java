@@ -46,9 +46,6 @@ public class MinimalWordComparator {
     PipelineOptions options = PipelineOptionsFactory.create();
     Pipeline p = Pipeline.create(options);
 
-
-
-    
     //Read from all files in the files/ directory
 
 	  try{
@@ -119,26 +116,15 @@ public class MinimalWordComparator {
 			mapString.put(key.getRow() + "-" + key.getColumn(), map.get(key).getCsvValue());
 		 }
 		 
+		 
 		 for(String key: mapString.keySet()) {
 //			 System.out.println(mapString.get(key));
-			 p.apply(Create.of(mapString.get(key))).setCoder(StringUtf8Coder.of()).apply(Filter.by((String cell) -> !cell.isEmpty())).apply(Count.perElement()).apply(
-			            MapElements.into(TypeDescriptors.strings())
-		                .via(
-		                    (KV<String, Long> cellCount) ->
-		                        "Cells are equal" + "? " + (areCellsEqual = (cellCount.getValue() > 1)) ));
-			 
+			 p.apply(Create.of(mapString.get(key))).setCoder(StringUtf8Coder.of())
+			 .apply(Filter.by((String cell) -> !cell.isEmpty()))
+			 .apply(TextIO.write().to("cells"));
 		 }
 		 
 		 
-		
-				
-				
-			
-			
-
-				
-		
-					
 				
 //					.apply(TextIO.write().to("cells"));
 					
@@ -149,6 +135,7 @@ public class MinimalWordComparator {
 					
 					if(areCellsEqual){
 				        System.out.println("CELLS ARE EQUAL, CONTINUE WITH PROCESSING");
+				      
 					//We can probably start a new process here using p.apply() since we know headers are equal
 				    }else{
 				        System.out.println("CELLS ARE NOT EQUAL, STOPPING");
